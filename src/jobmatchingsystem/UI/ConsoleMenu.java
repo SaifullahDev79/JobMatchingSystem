@@ -55,7 +55,7 @@ public class ConsoleMenu {
 	private void showMatches() {
 		System.out.println();
 		System.out.println("*** Matches ***");
-		if(candidates.isEmpty() && jobs.isEmpty()) {
+		if(candidates.isEmpty() || jobs.isEmpty()) {
 			System.out.println("Need atleast one candidate and one job");
 			return;
 		}
@@ -108,7 +108,7 @@ public class ConsoleMenu {
 		while(true) {
 			System.out.println(prompt);
 			String s = myScanner.nextLine().trim();
-			if(!s.isEmpty() || s.length()>2) return s;
+			if(!s.isEmpty() && s.length()>2) return s;
 			System.out.println(" Value must be atleast 3 characters. ");
 		}
 	}
