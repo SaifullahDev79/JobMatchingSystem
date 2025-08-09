@@ -1,3 +1,3 @@
-CandidateId,Name,Experience,Skills 
-113,Mark,3,SQL;Java;Python
-114,Bob,5,Excel;SQL;Python;PowerBI
+Id,Title,MinExperience,RequiredSkills
+10,Backend Engineer,2,[Java
+11,Data Engineer,3,[SQL
