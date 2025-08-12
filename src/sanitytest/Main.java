@@ -1,28 +1,25 @@
 package sanitytest;
 
-import jobmatchingsystem.model.Candidate;
-import jobmatchingsystem.service.jdbc.JdbcCandidateService;
+//import jobmatchingsystem.model.Candidate;
+import jobmatchingsystem.model.Job;
+import jobmatchingsystem.service.*;
+import jobmatchingsystem.service.jdbc.*;
 
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
     	
-    	System.out.println("CLASSPATH = " + System.getProperty("java.class.path"));
+    	
+            JobService jobSvc = new JdbcJobService();
 
-        var candSvc = new JdbcCandidateService();
+            // Insert one job row (change the ID if it already exists)
+            jobSvc.add(new Job(900, "Backend Engineer", 2, List.of("Java", "SQL", "SpringBoot")));
 
-        try {
-            // Insert one row (change ID if it already exists)
-            candSvc.add(new Candidate(301, "TestUser", 6, List.of("Java", "SQL")));
-            System.out.println("Inserted candidate 301.");
-        } catch (RuntimeException e) {
-            System.out.println("Insert skipped (maybe duplicate ID): " + e.getMessage());
+            // Read all rows
+            jobSvc.findall().forEach(j -> 
+                System.out.println(j.getId() + " | " + j.getTitle() + " | " +
+                                   j.getMinExperience() + " | " + j.getRequiredSkills())
+            );
         }
-
-        // Read all rows
-        candSvc.findall().forEach(c ->
-            System.out.println(c.getId() + " | " + c.getName() + " | " + c.getExperience() + " | " + c.getSkills())
-        );
-    }
 }

@@ -1,12 +1,37 @@
 package jobmatchingsystem.main;
 
-import jobmatchingsystem.IO.*;
-import jobmatchingsystem.model.*;
-import java.util.*;
-import jobmatchingsystem.UI.*;
+import jobmatchingsystem.service.CandidateService;
+import jobmatchingsystem.service.JobService;
+import jobmatchingsystem.service.jdbc.JdbcCandidateService;
+import jobmatchingsystem.service.jdbc.JdbcJobService;
+import jobmatchingsystem.UI.ConsoleMenu;
 
 public class Main {
     public static void main(String[] args) {
+        CandidateService candSvc = new JdbcCandidateService();
+        JobService jobSvc = new JdbcJobService();
+        new ConsoleMenu(candSvc, jobSvc).run();  // ✅ now defined
+        
+        
+        
+    }
+
+}
+
+
+
+
+
+
+//package jobmatchingsystem.main;
+//
+//import jobmatchingsystem.IO.*;
+//import jobmatchingsystem.model.*;
+//import java.util.*;
+//import jobmatchingsystem.UI.*;
+//
+//public class Main {
+//    public static void main(String[] args) {
 //        FileManager fm = new FileManager();
 //
 //        // Use project-relative paths
@@ -30,8 +55,7 @@ public class Main {
 //        var loadedCandidates = fm.readCandidatesCsv(candPath);
 //        var loadedJobs = fm.readJobsCsv(jobPath);
 //        Matcher.findMatches(loadedCandidates, loadedJobs).forEach(System.out::println);
-    	new ConsoleMenu().run();
+    	//new ConsoleMenu().run();
     	
     	
- }
-}
+ 
