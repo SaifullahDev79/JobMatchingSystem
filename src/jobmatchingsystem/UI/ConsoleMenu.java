@@ -3,6 +3,7 @@ package jobmatchingsystem.UI; // lowercase package names by convention
 import jobmatchingsystem.model.*;
 import jobmatchingsystem.service.CandidateService;
 import jobmatchingsystem.service.JobService;
+import jobmatchingsystem.service.AuthService;
 
 import java.util.*;
 
@@ -12,18 +13,63 @@ public class ConsoleMenu {
     // Services for DB operations
     private final CandidateService candSvc;
     private final JobService jobSvc;
-
+    private final AuthService auth;
+    private User currentUser;
     // In-memory lists for display/matching
     private List<Candidate> candidates = new ArrayList<>();
     private List<Job> jobs = new ArrayList<>();
 
-    public ConsoleMenu(CandidateService candSvc, JobService jobSvc) {
+    public ConsoleMenu(CandidateService candSvc, JobService jobSvc, AuthService auth) {
         this.candSvc = candSvc;
         this.jobSvc = jobSvc;
+        this.auth = auth;
+    }
+    
+    
+    private boolean authGate() {
+        while (true) {
+            System.out.println("*** Welcome ***");
+            System.out.println("1) Login");
+            System.out.println("2) Register");
+            System.out.println("3) Exit");
+            String choice = readline("Choose: ");
+
+            switch (choice) {
+                case "1" -> {
+                    String u = readline("Username: ");
+                    String p = readline("Password: ");
+                    var userOpt = auth.login(u, p);
+                    if (userOpt.isPresent()) {
+                        currentUser = userOpt.get();
+                        System.out.println("Logged in as " + currentUser.getUsername()
+                                + " (" + currentUser.getRole() + ")");
+                        return true;
+                    } else {
+                        System.out.println("Invalid credentials.");
+                    }
+                }
+                case "2" -> {
+                    String u = readline("New username: ");
+                    String p = readline("New password: ");
+                    boolean ok = auth.register(u, p, "user");
+                    if (ok) System.out.println("Registered. Please login.");
+                    else    System.out.println("Username already taken.");
+                }
+                case "3" -> { return false; }
+                default -> System.out.println("Invalid choice.");
+            }
+            System.out.println();
+        }
     }
 
+
     public void run() {
+    	if (!authGate()) {
+            System.out.println("Goodbye!");
+            return;
+            }
         refreshFromDb();
+    	
 
         while (true) {
             printHeader();
@@ -41,8 +87,10 @@ public class ConsoleMenu {
                 default -> System.out.println("Invalid choice. Try again.");
             }
             waitForEnter();
-        }
-    }
+            }
+        
+    
+}
 
     private void refreshFromDb() {
         candidates = candSvc.findall();
@@ -159,7 +207,8 @@ public class ConsoleMenu {
     }
 
     private void printHeader() {
-        System.out.println("\n*** Job Matching System ***");
+        System.out.println("\n*** Job Matching System ***" +
+        (currentUser != null ? " [user: " + currentUser.getUsername() + "]" : ""));
         System.out.println("1) List Candidates");
         System.out.println("2) List Jobs");
         System.out.println("3) Add Candidate");

@@ -11,15 +11,11 @@ public class Main {
     public static void main(String[] args) {
     	
     	
-            JobService jobSvc = new JdbcJobService();
+    	AuthService auth = new JdbcAuthService();
 
-            // Insert one job row (change the ID if it already exists)
-            jobSvc.add(new Job(900, "Backend Engineer", 2, List.of("Java", "SQL", "SpringBoot")));
+    	System.out.println("Register: " + auth.register("testuser", "testpass", "user")); // true first time, false if duplicate
+    	System.out.println("Login OK: " + auth.login("testuser", "testpass").isPresent()); // true
+    	System.out.println("Login NG: " + auth.login("testuser", "wrong").isPresent());    // false
 
-            // Read all rows
-            jobSvc.findall().forEach(j -> 
-                System.out.println(j.getId() + " | " + j.getTitle() + " | " +
-                                   j.getMinExperience() + " | " + j.getRequiredSkills())
-            );
         }
 }

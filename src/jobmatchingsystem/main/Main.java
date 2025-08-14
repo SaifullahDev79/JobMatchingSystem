@@ -5,12 +5,16 @@ import jobmatchingsystem.service.JobService;
 import jobmatchingsystem.service.jdbc.JdbcCandidateService;
 import jobmatchingsystem.service.jdbc.JdbcJobService;
 import jobmatchingsystem.UI.ConsoleMenu;
+import jobmatchingsystem.service.AuthService;
+import jobmatchingsystem.service.jdbc.*;
 
 public class Main {
     public static void main(String[] args) {
         CandidateService candSvc = new JdbcCandidateService();
         JobService jobSvc = new JdbcJobService();
-        new ConsoleMenu(candSvc, jobSvc).run();  // ✅ now defined
+        AuthService auth  = new JdbcAuthService();
+
+        new ConsoleMenu(candSvc, jobSvc, auth).run();
         
         
         
